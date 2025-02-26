@@ -1,7 +1,7 @@
-﻿  DataHandler.cpp
-  main.cpp
+﻿  main.cpp
+C:\Users\Vlad\source\repos\PaintBall_and_Muller_Collisions\GPT_Version_2\main.cpp(38,160): warning C4244: return: преобразование "double" в "float", возможна потеря данных
   DataHandler.obj : найден .netmodule MSIL или модуль, откомпилированный с параметром /GL; перезапускается компоновка с параметром /LTCG; добавьте /LTCG в командную строку компоновки для повышения производительности компоновщика
 LINK : warning LNK4075: не учитывается "/INCREMENTAL" из-за спецификации "/LTCG"
   Создание кода
   Создание кода завершено
-  GPT.vcxproj -> C:\Users\Vlad\source\repos\PaintBall\GPT_Version_2\x64\Debug\GPT.exe
+  GPT.vcxproj -> C:\Users\Vlad\source\repos\PaintBall_and_Muller_Collisions\GPT_Version_2\x64\Debug\GPT.exe

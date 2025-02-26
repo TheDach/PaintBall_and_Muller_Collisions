@@ -33,7 +33,7 @@ inline float ResultZ0(const float(&arr)[12]);
 inline float ResultRadius(const float(&arr)[12]);
 
 float** PaintBall(const int& size0, float** resultTetrUpPoints_1, const int& size1,
-	float** resultTetrUpPoints_2, int& outIntersectingCount, std::vector<std::vector<int>>& Out);
+	float** resultTetrUpPoints_2, int& outIntersectingCount, std::vector<std::vector<int>>& Out, const bool& flag);
 //====================================================================================================//
 
 //inline float** PaintBallPlusMuller(const int& size0, float** resultTetrUpPoints_1, const int& size1,

@@ -15,6 +15,7 @@ using namespace std;
 #define pathPregrada "..\\Resurs_txt\\pregrada test new.txt"
 #define pathUdarnikVnutri "..\\Resurs_txt\\\udarnik test new vnutri.txt"
 #define pathUdarnikDaleko "..\\Resurs_txt\\udarnik test new daleko.txt"
+#define pathUdarnik "..\\Resurs_txt\\udarnik test.txt"
 #define pathCube "..\\Resurs_txt\\cube_10_elements.txt"
 #define pathMillion "..\\Resurs_txt\\5_millions.txt"
 #define pathPregradaCilindr "..\\Resurs_txt\\pregrada_cilindr.txt"
@@ -25,7 +26,20 @@ using namespace std;
 
 
 
-#define THREAD 1
+float volumeTetrahedron(const float (&coords)[12]) {
+	//x1 = coords[0], y1 = coords[1], z1 = coords[2];
+	//x2 = coords[3], y2 = coords[4], z2 = coords[5];
+	//x3 = coords[6], y3 = coords[7], z3 = coords[8];
+	//x4 = coords[9], y4 = coords[10], z4 = coords[11];
+
+	return fabs(coords[0] * (coords[4] * coords[8] + coords[7] * coords[11] + coords[10] * coords[5] - coords[4] * coords[11] - coords[7] * coords[5] - coords[10] * coords[8]) -
+		coords[3] * (coords[1] * coords[8] + coords[7] * coords[11] + coords[10] * coords[2] - coords[1] * coords[11] - coords[7] * coords[2] - coords[10] * coords[8]) +
+		coords[6] * (coords[1] * coords[5] + coords[4] * coords[11] + coords[10] * coords[2] - coords[1] * coords[11] - coords[4] * coords[2] - coords[10] * coords[5]) -
+		coords[9] * (coords[1] * coords[5] + coords[4] * coords[8] + coords[7] * coords[2] - coords[1] * coords[8] - coords[4] * coords[2] - coords[7] * coords[5])) / 6.0;
+}
+
+#define THREAD 4
+#define FLAG_BIG_DICK false // Флаг для оптимизации алгоритма PaintBall, если фигуры большие, то ставить false
 
 int main() {
 	setlocale(LC_ALL, "Russian");
@@ -34,8 +48,8 @@ int main() {
 	double start = 0;
 	double end = 0;
 
-	//ConvertTxtToBin(pathPregradaCilindr, pathOutputBin1);
-	//ConvertTxtToBin(pathUdarnikCilindr, pathOutputBin2);
+	ConvertTxtToBin(pathPregradaCilindr, pathOutputBin1);
+	ConvertTxtToBin(pathUdarnikCilindr, pathOutputBin2);
 
 
 	//======================FIGURA1============================//
@@ -77,43 +91,49 @@ int main() {
 	//==========================================================//
 
 	start = omp_get_wtime();
-	PaintBall(size3, resultTetrUpPoints, size3_2, resultTetrUpPoints_2, count, Out);
-	cout << Muller(Out, count, resultTetrUpPoints, resultTetrUpPoints_2, Out2) << endl;
+	PaintBall(size3, resultTetrUpPoints, size3_2, resultTetrUpPoints_2, count, Out, FLAG_BIG_DICK);
 	end = omp_get_wtime();
-	std::cout << "Время выполнения PaintBall+Muller: " << end - start << " секунд." << endl;
-	//PrintPythonCollisium(count, Out, resultTetrUpPoints, resultTetrUpPoints_2);
+	std::cout << "Время выполнения PaintBall: " << end - start << " секунд." << endl;
+	start = omp_get_wtime();
+	count = Muller(Out, count, resultTetrUpPoints, resultTetrUpPoints_2, Out2);
+	end = omp_get_wtime();
+	std::cout << "Время выполнения Muller: " << end - start << " секунд." << endl;
+	std::cout << "Кол-во 100% пересечений: " << count << endl;
+
+	//PrintPythonCollisium(count, Out2, resultTetrUpPoints, resultTetrUpPoints_2);
 
 
+	
 
 	//======================FIGURA1============================//
-	delete[]arrayPoints;
-	delete[]indexPoints;
-	delete[]indexUzla;
-	delete[]Tetrahedrons;
+	if (arrayPoints) delete[] arrayPoints;
+	if (indexPoints) delete[] indexPoints;
+	if (indexUzla) delete[] indexUzla;
+	if (Tetrahedrons) delete[] Tetrahedrons; // Убедитесь, что вы выделяли память для Tetrahedrons
 	for (int i = 0; i < size3; i++) {
-		delete[]resultCreateTetrUpUzel[i];
+		if (resultCreateTetrUpUzel[i]) delete[] resultCreateTetrUpUzel[i];
 	}
-	delete[]resultCreateTetrUpUzel;
-	
+	delete[] resultCreateTetrUpUzel;
+
 	for (int i = 0; i < size3; i++) {
-		delete[]resultTetrUpPoints[i];
+		if (resultTetrUpPoints[i]) delete[] resultTetrUpPoints[i];
 	}
-	delete[]resultTetrUpPoints;
+	delete[] resultTetrUpPoints;
 
 	//======================FIGURA2============================//
-	delete[]arrayPoints_2;
-	delete[]indexPoints_2;
-	delete[]indexUzla_2;
-	delete[]Tetrahedrons_2;
-	for (int i = 0; i < size3; i++) {
-		delete[]resultCreateTetrUpUzel_2[i];
+	if (arrayPoints_2) delete[] arrayPoints_2;
+	if (indexPoints_2) delete[] indexPoints_2;
+	if (indexUzla_2) delete[] indexUzla_2;
+	if (Tetrahedrons_2) delete[] Tetrahedrons_2; // Убедитесь, что вы выделяли память для Tetrahedrons_2
+	for (int i = 0; i < size3_2; i++) {
+		if (resultCreateTetrUpUzel_2[i]) delete[] resultCreateTetrUpUzel_2[i];
 	}
-	delete[]resultCreateTetrUpUzel_2;
+	delete[] resultCreateTetrUpUzel_2;
 
-	for (int i = 0; i < size3; i++) {
-		delete[]resultTetrUpPoints_2[i];
+	for (int i = 0; i < size3_2; i++) {
+		if (resultTetrUpPoints_2[i]) delete[] resultTetrUpPoints_2[i];
 	}
-	delete[]resultTetrUpPoints_2;
+	delete[] resultTetrUpPoints_2;
 	//=========================================================//
 
 	return 0;
