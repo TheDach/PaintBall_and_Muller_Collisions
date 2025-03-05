@@ -5,6 +5,14 @@
     {
       "AbsoluteMoniker": "D:0:0:{655203DD-AD39-4479-A010-56BC12EFE0F8}|GPT.vcxproj|C:\\Users\\Vlad\\source\\repos\\PaintBall_and_Muller_Collisions\\GPT_Version_2\\main.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
       "RelativeMoniker": "D:0:0:{655203DD-AD39-4479-A010-56BC12EFE0F8}|GPT.vcxproj|solutionrelative:main.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{655203DD-AD39-4479-A010-56BC12EFE0F8}|GPT.vcxproj|C:\\Users\\Vlad\\source\\repos\\PaintBall_and_Muller_Collisions\\GPT_Version_2\\DataHandler.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{655203DD-AD39-4479-A010-56BC12EFE0F8}|GPT.vcxproj|solutionrelative:DataHandler.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{655203DD-AD39-4479-A010-56BC12EFE0F8}|GPT.vcxproj|C:\\Users\\Vlad\\source\\repos\\PaintBall_and_Muller_Collisions\\GPT_Version_2\\DataHandler.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{655203DD-AD39-4479-A010-56BC12EFE0F8}|GPT.vcxproj|solutionrelative:DataHandler.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     }
   ],
   "DocumentGroupContainers": [
@@ -13,7 +21,7 @@
       "VerticalTabListWidth": 256,
       "DocumentGroups": [
         {
-          "DockedHeight": 330,
+          "DockedHeight": 385,
           "SelectedChildIndex": 0,
           "Children": [
             {
@@ -24,14 +32,51 @@
               "RelativeDocumentMoniker": "main.cpp",
               "ToolTip": "C:\\Users\\Vlad\\source\\repos\\PaintBall_and_Muller_Collisions\\GPT_Version_2\\main.cpp",
               "RelativeToolTip": "main.cpp",
-              "ViewState": "AgIAACcAAAAAAAAAAAAAACkAAABuAAAAAAAAAA==",
+              "ViewState": "AgIAAFgAAAAAAAAAAAAAAGEAAAAnAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
               "WhenOpened": "2025-02-25T08:48:45.298Z",
+              "IsPinned": true,
               "EditorCaption": ""
             },
             {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "DataHandler.h",
+              "DocumentMoniker": "C:\\Users\\Vlad\\source\\repos\\PaintBall_and_Muller_Collisions\\GPT_Version_2\\DataHandler.h",
+              "RelativeDocumentMoniker": "DataHandler.h",
+              "ToolTip": "C:\\Users\\Vlad\\source\\repos\\PaintBall_and_Muller_Collisions\\GPT_Version_2\\DataHandler.h",
+              "RelativeToolTip": "DataHandler.h",
+              "ViewState": "AgIAAAMAAAAAAAAAAAAAAA4AAAAgAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2025-03-05T03:29:14.519Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "DataHandler.cpp",
+              "DocumentMoniker": "C:\\Users\\Vlad\\source\\repos\\PaintBall_and_Muller_Collisions\\GPT_Version_2\\DataHandler.cpp",
+              "RelativeDocumentMoniker": "DataHandler.cpp",
+              "ToolTip": "C:\\Users\\Vlad\\source\\repos\\PaintBall_and_Muller_Collisions\\GPT_Version_2\\DataHandler.cpp",
+              "RelativeToolTip": "DataHandler.cpp",
+              "ViewState": "AgIAACMBAAAAAAAAAAAgwF4BAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2025-03-05T03:20:56.325Z",
+              "EditorCaption": ""
+            }
+          ]
+        },
+        {
+          "DockedHeight": 159,
+          "SelectedChildIndex": -1,
+          "Children": [
+            {
               "$type": "Bookmark",
-              "Name": "ST:1:0:{d212f56b-c48a-434c-a121-1c5d80b59b9f}"
+              "Name": "ST:0:0:{d78612c7-9962-4b83-95d9-268046dad23a}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{34e76e81-ee4a-11d0-ae2e-00a0c90fffc3}"
             }
           ]
         }

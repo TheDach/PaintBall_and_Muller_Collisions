@@ -198,6 +198,159 @@ float** CreateTetrUpPoints(int size3, int** TetrUpUzel, float(*arrayPoints)[3])
 	return arr;
 }
 
+
+// Volume
+int* ReadFromFileVneshnieBinForV(std::string path, int& size1, int& size2, int& size3, float(*&arrayPoints)[3], int(*&indexPoints)[5], int(*&indexUzla)[4]) {
+	std::ifstream in;
+	in.open(path, std::ios::in | std::ios::binary);
+	if (in.is_open()) {
+		std::cout << "File opened" << std::endl;
+
+		int sizePoint;
+		in.read(reinterpret_cast<char*>(&sizePoint), sizeof(int));
+		size1 = sizePoint;
+
+		arrayPoints = new float[sizePoint][3];
+		for (int i = 0; i < sizePoint; i++) {
+			in.read(reinterpret_cast<char*>(&arrayPoints[i][0]), 3 * sizeof(float));
+		}
+
+		int sizeTetrahedrons;
+		in.read(reinterpret_cast<char*>(&sizeTetrahedrons), sizeof(int));
+		size2 = sizeTetrahedrons;
+
+		indexPoints = new int[sizeTetrahedrons][5];
+		for (int i = 0; i < sizeTetrahedrons; i++) {
+			in.read(reinterpret_cast<char*>(&indexPoints[i][0]), 5 * sizeof(int));
+		}
+
+		int sizeTriangle;
+		in.read(reinterpret_cast<char*>(&sizeTriangle), sizeof(int));
+		indexUzla = new int[sizeTriangle][4];
+		for (int i = 0; i < sizeTriangle; i++) {
+			in.read(reinterpret_cast<char*>(&indexUzla[i][0]), 4 * sizeof(int));
+		}
+
+		int max = -1;
+		for (int i = 0; i < sizeTriangle; i++) {
+			for (int j = 0; j < 4; j++) {
+				if (indexUzla[i][j] > max) {
+					max = indexUzla[i][j];  // Обновляем max, если нашли большее значение
+				}
+			}
+		}
+		std::cout << "Max: " << max << std::endl;
+
+
+
+		std::set<std::set<int>> uniqueTetrandons;
+		std::set<int> indexArr;
+		int count = 0;
+		for (int a = 1; a <= max; a++) {
+			std::set<int> currentSet; // Создаем новый набор для текущего a
+			for (int j = 0; j < sizeTetrahedrons; j++) {
+				if (indexPoints[j][1] == a || indexPoints[j][2] == a || indexPoints[j][3] == a || indexPoints[j][4] == a) {
+					currentSet.insert(indexPoints[j][1]);
+					currentSet.insert(indexPoints[j][2]);
+					currentSet.insert(indexPoints[j][3]);
+					currentSet.insert(indexPoints[j][4]);
+					indexArr.insert(j);
+					uniqueTetrandons.insert(currentSet);
+					count++;
+					currentSet.clear();
+				}
+			}
+		}
+		//printUnique(uniqueTetrandons, arrayPoints);
+		int* Tetrahedrons = new int[indexArr.size()];
+		int i = 0;
+		for (auto it = indexArr.begin(); it != indexArr.end(); ++it) {
+			Tetrahedrons[i] = *it;
+			i++;
+		}
+		std::cout << std::endl;
+		int index2 = 0;
+
+		std::cout << "\rЗагрузка завершена!" << std::endl;
+		//std::cout << uniqueTetrandons.size()<<std::endl;
+		size3 = uniqueTetrandons.size();
+
+		in.close();
+		return Tetrahedrons;
+	}
+	else {
+		std::cout << "ERROR: File is not opened" << std::endl;
+		in.close();
+
+	}
+}
+
+void WriteToFileBinary(const std::string& outputPath, int size1, int size2, const int size3,
+	float(*arrayPoints)[3], int(*indexPoints)[5], int(*indexUzla)[4], int* Tetrahedrons) {
+	std::ofstream out;
+	out.open(outputPath, std::ios::out | std::ios::binary);
+	if (out.is_open()) {
+		std::cout << "File opened for writing" << std::endl;
+
+		// Записываем размеры
+		out.write(reinterpret_cast<const char*>(&size1), sizeof(int));
+		out.write(reinterpret_cast<const char*>(&size2), sizeof(int));
+		out.write(reinterpret_cast<const char*>(&size3), sizeof(int));
+
+		// Записываем массивы
+		out.write(reinterpret_cast<const char*>(arrayPoints), size1 * 3 * sizeof(float));
+		out.write(reinterpret_cast<const char*>(indexPoints), size2 * 5 * sizeof(int));
+		out.write(reinterpret_cast<const char*>(indexUzla), size3 * 4 * sizeof(int));
+
+		// Записываем Tetrahedrons
+		out.write(reinterpret_cast<const char*>(Tetrahedrons), size3 * sizeof(int));
+
+		std::cout << "Data written to file successfully!" << std::endl;
+		out.close();
+	}
+	else {
+		std::cout << "ERROR: File is not opened for writing" << std::endl;
+	}
+}
+
+void ReadFromFileBinary(const std::string& inputPath, int& size1, int& size2, int& size3,
+	float(*&arrayPoints)[3], int(*&indexPoints)[5], int(*&indexUzla)[4], int*& Tetrahedrons) {
+	std::ifstream in;
+	in.open(inputPath, std::ios::in | std::ios::binary);
+	if (in.is_open()) {
+		std::cout << "File opened for reading" << std::endl;
+
+		// Считываем размеры
+		in.read(reinterpret_cast<char*>(&size1), sizeof(int));
+		in.read(reinterpret_cast<char*>(&size2), sizeof(int));
+		in.read(reinterpret_cast<char*>(&size3), sizeof(int));
+
+		std::cout << size1 << "\t" << size2 << "\t" << size3 << std::endl;
+
+		// Выделяем память для массивов
+		arrayPoints = new float[size1][3];
+		in.read(reinterpret_cast<char*>(arrayPoints), size1 * 3 * sizeof(float));
+
+		indexPoints = new int[size2][5];
+		in.read(reinterpret_cast<char*>(indexPoints), size2 * 5 * sizeof(int));
+
+		indexUzla = new int[size3][4];
+		in.read(reinterpret_cast<char*>(indexUzla), size3 * 4 * sizeof(int));
+
+		// Выделяем память для Tetrahedrons
+		Tetrahedrons = new int[size3];
+		in.read(reinterpret_cast<char*>(Tetrahedrons), size3 * sizeof(int));
+
+		std::cout << "Data read from file successfully!" << std::endl;
+
+		in.close();
+	}
+	else {
+		std::cout << "ERROR: File is not opened for reading" << std::endl;
+	}
+}
+//
+
 void PrintArrayPoints(int size1, float(*arrayPoints)[3]) {
 	std::cout << "Количество точек: " << size1 << std::endl;
 	for (int i = 0; i < size1; i++)
@@ -312,4 +465,15 @@ void PrintAll(int size1, int size2, int size3, float(*arrayPoints)[3], int(*inde
 	PrintIndexPoints(size2, indexPoints);
 	PrintIndexUzla(size3, indexUzla);
 	PrintTetrahedronsUp(size1, size2, size3, Tetrahedrons);
+}
+void PrintOut(std::vector<std::vector<int>>& Out, int size)
+{
+	for (int i = 0; i < size; i++)
+	{
+		for (int j = 0; j < 3; j++)
+		{
+			std::cout << Out[i][j] << '\t';
+		}
+		std::cout << '\n';
+	}
 }

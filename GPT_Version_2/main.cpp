@@ -1,28 +1,34 @@
 ﻿#include <iostream>
 #include <vector>
-#include <cmath>
 #include <omp.h>
 #include <array>
 
 #include "PaintBall.h"
 #include "Muller.h"
 #include "DataHandler.h"
+#include "Volume.h"
 
 
 using namespace std;
 
 //====================================== PATH ====================================================================//
 #define pathPregrada "..\\Resurs_txt\\pregrada test new.txt"
-#define pathUdarnikVnutri "..\\Resurs_txt\\\udarnik test new vnutri.txt"
+#define pathUdarnikVnutri "..\\Resurs_txt\\udarnik test new vnutri.txt"
 #define pathUdarnikDaleko "..\\Resurs_txt\\udarnik test new daleko.txt"
 #define pathUdarnik "..\\Resurs_txt\\udarnik test.txt"
 #define pathCube "..\\Resurs_txt\\cube_10_elements.txt"
 #define pathMillion "..\\Resurs_txt\\5_millions.txt"
 #define pathPregradaCilindr "..\\Resurs_txt\\pregrada_cilindr.txt"
 #define pathUdarnikCilindr "..\\Resurs_txt\\udarnik_cilindr.txt"
+#define pathOne "..\\Resurs_txt\\1"
+#define pathTwo "..\\Resurs_txt\\2"
 
 #define pathOutputBin1 "..\\Resurs_bin\\out1.bin"
 #define pathOutputBin2 "..\\Resurs_bin\\out2.bin"
+
+#define pathBin1 "1.bin"
+#define pathBin2 "2.bin"
+
 
 
 
@@ -43,17 +49,26 @@ float volumeTetrahedron(const float (&coords)[12]) {
 
 int main() {
 	setlocale(LC_ALL, "Russian");
-	omp_set_num_threads(THREAD);
+	int Thread;
+	std::cout << "Введите Кол-во потоков: " << endl;
+	std::cin >> Thread;
+	omp_set_num_threads(Thread);
 
 	double start = 0;
 	double end = 0;
 
-	ConvertTxtToBin(pathPregradaCilindr, pathOutputBin1);
-	ConvertTxtToBin(pathUdarnikCilindr, pathOutputBin2);
+	int choose = 1;
+	cout << endl << "Нужно конвертировать: 1 - да, 0 - нет\n" << endl;
+	cin >> choose;
+	if (choose) {
+		ConvertTxtToBin(pathPregradaCilindr, pathOutputBin1);
+		ConvertTxtToBin(pathUdarnikCilindr, pathOutputBin2);
+	}
 
 
 	//======================FIGURA1============================//
-	int size1, size2, size3 = 0;//size1 - sizePoints(1 блок), size2 - sizeTetr (2 блок), size3 - sizeTriangle (3 блок)
+	int size1 = 0, size2 = 0, size3 = 0;//size1 - sizePoints(1 блок), size2 - sizeTetr (2 блок), size3 - sizeTriangle (3 блок)
+	int size = 0;
 
 	float(*arrayPoints)[3] = nullptr;//1Блок
 	int(*indexPoints)[5] = nullptr;//2Блок
@@ -61,7 +76,13 @@ int main() {
 
 
 	start = omp_get_wtime();
-	int(*Tetrahedrons) = ReadFromFileVneshnieBinTest(pathOutputBin1, size1, size2, size3, arrayPoints, indexPoints, indexUzla);
+	int *Tetrahedrons = nullptr;
+	//Tetrahedrons = ReadFromFileVneshnieBinTest(pathOutputBin1, size1, size2, size3, arrayPoints, indexPoints, indexUzla);*/
+	// Volume
+	Tetrahedrons = ReadFromFileVneshnieBinForV(pathOutputBin1, size1, size2, size3, arrayPoints, indexPoints, indexUzla);
+	//WriteToFileBinary(pathBin1, size1, size2, size3, arrayPoints, indexPoints, indexUzla, Tetrahedrons);
+	//ReadFromFileBinary(pathBin1, size1, size2, size3, arrayPoints, indexPoints, indexUzla, Tetrahedrons);
+	
 	int** resultCreateTetrUpUzel = CreateTetrUpUzel(size3, indexPoints, Tetrahedrons);
 	float** resultTetrUpPoints = CreateTetrUpPoints(size3, resultCreateTetrUpUzel, arrayPoints);
 	end = omp_get_wtime();
@@ -69,7 +90,8 @@ int main() {
 	std::cout << "Кол-во поверхностных элементов: " << size3 << endl;
 
 	//======================FIGURA2============================//
-	int size1_2, size2_2, size3_2 = 0;//size1 - sizePoints(1 блок), size2 - sizeTetr (2 блок), size3 - sizeTriangle (3 блок)
+	int size1_2 = 0, size2_2 = 0, size3_2 = 0;//size1 - sizePoints(1 блок), size2 - sizeTetr (2 блок), size3 - sizeTriangle (3 блок)
+	int size_2 = 0;
 
 	float(*arrayPoints_2)[3] = nullptr;//1Блок
 	int(*indexPoints_2)[5] = nullptr;//2Блок
@@ -77,7 +99,15 @@ int main() {
 
 
 	start = omp_get_wtime();
-	int(*Tetrahedrons_2) = ReadFromFileVneshnieBinTest(pathOutputBin2, size1_2, size2_2, size3_2, arrayPoints_2, indexPoints_2, indexUzla_2);
+	int *Tetrahedrons_2 = nullptr;
+	//Tetrahedrons_2 = ReadFromFileVneshnieBinTest(pathOutputBin2, size1_2, size2_2, size3_2, arrayPoints_2, indexPoints_2, indexUzla_2);
+	// Volume
+	Tetrahedrons_2 = ReadFromFileVneshnieBinForV(pathOutputBin2, size1_2, size2_2, size3_2, arrayPoints_2, indexPoints_2, indexUzla_2);
+	//WriteToFileBinary(pathBin2, size1_2, size2_2, size3_2, arrayPoints_2, indexPoints_2, indexUzla_2, Tetrahedrons_2);
+	//ReadFromFileBinary(pathBin2, size1_2, size2_2, size3_2, arrayPoints_2, indexPoints_2, indexUzla_2, Tetrahedrons_2);
+
+	//
+
 	int** resultCreateTetrUpUzel_2 = CreateTetrUpUzel(size3_2, indexPoints_2, Tetrahedrons_2);
 	float** resultTetrUpPoints_2 = CreateTetrUpPoints(size3_2, resultCreateTetrUpUzel_2, arrayPoints_2);
 	end = omp_get_wtime();
@@ -91,19 +121,24 @@ int main() {
 	//==========================================================//
 
 	start = omp_get_wtime();
-	PaintBall(size3, resultTetrUpPoints, size3_2, resultTetrUpPoints_2, count, Out, FLAG_BIG_DICK);
+	//PaintBall(size3, resultTetrUpPoints, size3_2, resultTetrUpPoints_2, count, Out, FLAG_BIG_DICK);
 	end = omp_get_wtime();
-	std::cout << "Время выполнения PaintBall: " << end - start << " секунд." << endl;
+	std::cout << std::endl << "Время выполнения PaintBall: " << end - start << " секунд." << endl;
 	start = omp_get_wtime();
-	count = Muller(Out, count, resultTetrUpPoints, resultTetrUpPoints_2, Out2);
+	//count = Muller(Out, count, resultTetrUpPoints, resultTetrUpPoints_2, Out2);
+	//count = Muller(size3, size3_2, resultTetrUpPoints, resultTetrUpPoints_2, Out2); // Muller для тестов в соло
+	//int count100Proc = V(Out, count, resultTetrUpPoints, resultTetrUpPoints_2, Out2);
+	int count100Proc = V(size3, size3_2, resultTetrUpPoints, resultTetrUpPoints_2, Out2); // Объемы в соло
 	end = omp_get_wtime();
-	std::cout << "Время выполнения Muller: " << end - start << " секунд." << endl;
-	std::cout << "Кол-во 100% пересечений: " << count << endl;
+	std::cout << "Время выполнения 100% пересечений: " << end - start << " секунд." << endl;
+	std::cout << "Кол-во 100% пересечений: " << count100Proc << endl;
+	
 
+	PrintOut(Out2, count100Proc);
 	//PrintPythonCollisium(count, Out2, resultTetrUpPoints, resultTetrUpPoints_2);
 
 
-	
+	std::cin >> size1;
 
 	//======================FIGURA1============================//
 	if (arrayPoints) delete[] arrayPoints;

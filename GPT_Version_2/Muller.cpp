@@ -401,5 +401,38 @@ int Muller(std::vector<std::vector<int>>& Out, int size, float** resultTetrUpPoi
 	return count;
 }
 
+// Muller в соло тесты
+int Muller(int size1, int size2, float** resultTetrUpPoints, float** resultTetrUpPoints_2, std::vector<std::vector<int>>& Out2)
+{
+	int count = 0;
+	float arr0[12] = { 0 }, arr1[12] = { 0 };
+
+	// Распараллеливаем цикл с использованием OpenMP
+#pragma omp parallel for private(arr0, arr1) reduction(+:count)
+	for (int i = 0; i < size1; i++)
+	{
+		for (int k = 0; k < size2; k++) {
+			// Копирование данных в массивы arr0 и arr1
+			for (int j = 0; j < 12; j++)
+			{
+				arr0[j] = resultTetrUpPoints[i][j]; // Используем i для resultTetrUpPoints
+				arr1[j] = resultTetrUpPoints_2[k][j]; // Используем k для resultTetrUpPoints_2
+			}
+
+			// Проверка пересечения
+			if (tetras_intersect(arr0, arr1))
+			{
+				// Синхронизация при добавлении в Out2
+#pragma omp critical
+				{
+					Out2.push_back({ i, k });
+				}
+				count++;
+			}
+		}
+	}
+
+	return count;
+}
 
 //====================================================================================================//

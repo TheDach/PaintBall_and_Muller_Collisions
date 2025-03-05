@@ -290,7 +290,7 @@ float** PaintBall(const int& size0, float** resultTetrUpPoints_1, const int& siz
 	}
 
 
-	std::cout << "Время выполнения: " << duration << "Секунд" << std::endl;
+	std::cout << "Время выполнения PaintBall: " << duration << "Секунд" << std::endl;
 	std::cout << "Кол-во пересечений: " << count1 << std::endl;
 	//std::cout << "Кол-во 100% пересечений: " << count2 << std::endl;
 
